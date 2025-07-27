@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WGSL Canvas Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      margin-bottom: 30px;
+    }
+    
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    .demo-item {
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    .demo-item h3 {
+      margin: 0;
+      padding: 15px;
+      background: #333;
+      font-size: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .demo-item canvas {
+      display: block;
+      width: 100%;
+      height: 300px;
+      cursor: move;
+    }
+    
+    .controls {
+      padding: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    button {
+      padding: 8px 16px;
+      background: #0066cc;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    
+    button:hover {
+      background: #0052a3;
+    }
+    
+    .error {
+      background: #ff4444;
+      color: white;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    
+    .shader-editor {
+      padding: 20px;
+      background: #1a1a1a;
+      border-top: 1px solid #444;
+    }
+    
+    .shader-editor textarea {
+      width: 100%;
+      min-height: 180px;
+      background: #0d0d0d;
+      color: #00ff00;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 15px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      resize: vertical;
+      box-sizing: border-box;
+      line-height: 1.6;
+      tab-size: 2;
+    }
+    
+    .shader-editor textarea:focus {
+      outline: none;
+      border-color: #0066cc;
+    }
+    
+    .compile-error {
+      color: #ff6666;
+      font-size: 13px;
+      margin-top: 10px;
+      padding: 12px;
+      background: rgba(255, 0, 0, 0.1);
+      border: 1px solid rgba(255, 0, 0, 0.3);
+      border-radius: 4px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      white-space: pre-wrap;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>WGSL Canvas Demos</h1>
+    
+    <div id="error-container"></div>
+    
+    <div class="demo-grid">
+      <div class="demo-item">
+        <h3>
+          <span>Simple Red</span>
+        </h3>
+        <canvas id="canvas0"></canvas>
+        <div class="controls">
+          <button onclick="toggleCanvas('canvas0')">Play/Pause</button>
+        </div>
+        <div class="shader-editor" id="editor-demo0">
+          <textarea id="shader-demo0" oninput="updateShader('demo0')"></textarea>
+          <div id="error-demo0" class="compile-error" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <div class="demo-item">
+        <h3>
+          <span>Basic Gradient</span>
+        </h3>
+        <canvas id="canvas1"></canvas>
+        <div class="controls">
+          <button onclick="toggleCanvas('canvas1')">Play/Pause</button>
+        </div>
+        <div class="shader-editor" id="editor-demo1">
+          <textarea id="shader-demo1" oninput="updateShader('demo1')"></textarea>
+          <div id="error-demo1" class="compile-error" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <div class="demo-item">
+        <h3>
+          <span>Wave Pattern</span>
+        </h3>
+        <canvas id="canvas2"></canvas>
+        <div class="controls">
+          <button onclick="toggleCanvas('canvas2')">Play/Pause</button>
+        </div>
+        <div class="shader-editor" id="editor-demo2">
+          <textarea id="shader-demo2" oninput="updateShader('demo2')"></textarea>
+          <div id="error-demo2" class="compile-error" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <div class="demo-item">
+        <h3>
+          <span>Plasma Effect</span>
+        </h3>
+        <canvas id="canvas3"></canvas>
+        <div class="controls">
+          <button onclick="toggleCanvas('canvas3')">Play/Pause</button>
+        </div>
+        <div class="shader-editor" id="editor-demo3">
+          <textarea id="shader-demo3" oninput="updateShader('demo3')"></textarea>
+          <div id="error-demo3" class="compile-error" style="display: none;"></div>
+        </div>
+      </div>
+      
+      <div class="demo-item">
+        <h3>
+          <span>Interactive Mouse</span>
+        </h3>
+        <canvas id="canvas4"></canvas>
+        <div class="controls">
+          <button onclick="toggleCanvas('canvas4')">Play/Pause</button>
+        </div>
+        <div class="shader-editor" id="editor-demo4">
+          <textarea id="shader-demo4" oninput="updateShader('demo4')"></textarea>
+          <div id="error-demo4" class="compile-error" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/demo/main.ts"></script>
+</body>
+</html>
