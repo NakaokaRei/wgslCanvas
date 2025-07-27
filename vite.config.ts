@@ -3,9 +3,15 @@ import path from 'path';
 
 export default defineConfig({
   root: '.',
+  base: process.env.NODE_ENV === 'production' ? '/wgslCanvas/' : '/',
   build: {
     outDir: 'dist-demo',
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html')
+      }
+    }
   },
   resolve: {
     alias: {

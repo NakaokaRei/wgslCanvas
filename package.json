@@ -8,7 +8,8 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "demo": "vite",
-    "build-demo": "vite build",
+    "build-demo": "NODE_ENV=production vite build",
+    "preview": "vite preview",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"
   },

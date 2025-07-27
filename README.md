@@ -2,6 +2,8 @@
 
 A TypeScript library for rendering WGSL shaders with WebGPU, inspired by [glsl-canvas](https://github.com/actarian/glsl-canvas).
 
+🎨 **[Live Demo](https://nakaokarei.github.io/wgslCanvas/)**
+
 ## Features
 
 - Easy-to-use API for WebGPU shader rendering
